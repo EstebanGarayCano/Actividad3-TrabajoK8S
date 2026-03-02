@@ -1,0 +1,22 @@
+# .NET
+bin/
+obj/
+*.user
+*.db
+*.db-shm
+*.db-wal
+
+# Node / Frontend
+node_modules/
+dist/
+npm-debug.log*
+
+# IDE
+.idea/
+.vs/
+*.swp
+.DS_Store
+
+# Secrets / env
+.env
+*.pfx

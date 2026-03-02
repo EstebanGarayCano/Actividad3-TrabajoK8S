@@ -1,0 +1,43 @@
+# Usa tu MySQL ya existente en Docker (puerto 3306 en el host).
+# El Backend se conecta vía host.docker.internal:3306.
+
+services:
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: proyectoesteban-backend
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Server=host.docker.internal;Port=3306;Database=MyDb;User=root;Password=12345;Connection Timeout=5;"
+    ports:
+      - "5000:5000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  productos:
+    build:
+      context: ./Productos
+      dockerfile: Dockerfile
+    container_name: proyectoesteban-productos
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Data Source=/data/productos.db"
+    ports:
+      - "5001:5001"
+    volumes:
+      - productos_data:/data
+
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    container_name: proyectoesteban-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+      - productos
+
+volumes:
+  productos_data:
