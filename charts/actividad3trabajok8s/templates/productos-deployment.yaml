@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: productos
+  labels:
+    app: productos
+    app.kubernetes.io/name: productos
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.productos.replicaCount }}
+  selector:
+    matchLabels:
+      app: productos
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: productos
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: productos
+          image: "{{ .Values.productos.image.repository }}:{{ .Values.productos.image.tag }}"
+          imagePullPolicy: {{ .Values.productos.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.productos.containerPort }}
+          {{- if .Values.productos.env }}
+          env:
+            {{- range .Values.productos.env }}
+            - name: {{ .name }}
+              value: "{{ .value }}"
+            {{- end }}
+          {{- end }}

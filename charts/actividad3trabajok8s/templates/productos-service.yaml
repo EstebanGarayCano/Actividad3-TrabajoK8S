@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: productos
+  labels:
+    app: productos
+    app.kubernetes.io/name: productos
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  type: {{ .Values.productos.service.type }}
+  selector:
+    app: productos
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  ports:
+    - port: {{ .Values.productos.service.port }}
+      targetPort: {{ .Values.productos.containerPort }}

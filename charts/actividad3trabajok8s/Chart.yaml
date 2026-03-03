@@ -1,0 +1,6 @@
+apiVersion: v2
+name: actividad3trabajok8s
+description: Helm chart para backend, productos y frontend del Proyecto Esteban
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

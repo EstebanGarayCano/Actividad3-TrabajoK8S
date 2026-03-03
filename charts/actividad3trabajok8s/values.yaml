@@ -1,0 +1,38 @@
+backend:
+  replicaCount: 1
+  image:
+    repository: us-central1-docker.pkg.dev/project-5a9e4b02-002e-455f-acc/actividad3trabajok8s/backend
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: LoadBalancer
+    port: 8080
+  containerPort: 8080
+  env: []
+
+productos:
+  replicaCount: 1
+  image:
+    repository: us-central1-docker.pkg.dev/project-5a9e4b02-002e-455f-acc/actividad3trabajok8s/productos
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: LoadBalancer
+    port: 5000
+  containerPort: 5000
+  env:
+    - name: ConnectionStrings__DefaultConnection
+      value: "Data Source=/tmp/productos.db"
+
+frontend:
+  replicaCount: 1
+  image:
+    repository: us-central1-docker.pkg.dev/project-5a9e4b02-002e-455f-acc/actividad3trabajok8s/frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: LoadBalancer
+    port: 80
+  containerPort: 80
+  backendUrl: "http://backend:8080"
+  productosUrl: "http://productos:5000"
