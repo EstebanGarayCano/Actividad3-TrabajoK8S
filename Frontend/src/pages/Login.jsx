@@ -35,6 +35,15 @@ export default function Login() {
     <div className={styles.wrapper}>
       <div className={styles.card}>
         <h2 className={styles.title}>Iniciar sesión</h2>
+        <nav className={styles.categoryNav}>
+          <span className={styles.categoryLabel}>Explora nuestras categorías:</span>
+          <div className={styles.categoryLinks}>
+            <Link to="/hombre">Hombre</Link>
+            <Link to="/mujer">Mujer</Link>
+            <Link to="/ninos">Niños</Link>
+            <Link to="/deportes">Deportes</Link>
+          </div>
+        </nav>
         <form onSubmit={handleSubmit} className={styles.form}>
           <label className={styles.label}>
             Nombre de usuario

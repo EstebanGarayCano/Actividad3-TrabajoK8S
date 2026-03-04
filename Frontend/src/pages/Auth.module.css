@@ -22,6 +22,35 @@
   text-align: center;
 }
 
+.categoryNav {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.categoryLabel {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+}
+
+.categoryLinks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.categoryLinks a {
+  color: var(--text-muted);
+}
+
+.categoryLinks a:hover {
+  color: var(--primary);
+  text-decoration: none;
+}
+
 .form {
   display: flex;
   flex-direction: column;

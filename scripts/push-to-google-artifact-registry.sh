@@ -37,23 +37,26 @@ echo ""
 
 cd "$ROOT_DIR"
 
+# Build para linux/amd64 (GKE / Cloud Run). En Mac M1/M2 evita "no match for platform in manifest".
+PLATFORM="linux/amd64"
+
 # Build y push Backend
-echo ">>> Build Backend..."
-docker build -t proyectoesteban-backend:$TAG -f Backend/Dockerfile Backend
+echo ">>> Build Backend ($PLATFORM)..."
+docker build --platform $PLATFORM -t proyectoesteban-backend:$TAG -f Backend/Dockerfile Backend
 docker tag proyectoesteban-backend:$TAG $REGISTRY/backend:$TAG
 echo ">>> Push Backend..."
 docker push $REGISTRY/backend:$TAG
 
 # Build y push Productos
-echo ">>> Build Productos..."
-docker build -t proyectoesteban-productos:$TAG -f Productos/Dockerfile Productos
+echo ">>> Build Productos ($PLATFORM)..."
+docker build --platform $PLATFORM -t proyectoesteban-productos:$TAG -f Productos/Dockerfile Productos
 docker tag proyectoesteban-productos:$TAG $REGISTRY/productos:$TAG
 echo ">>> Push Productos..."
 docker push $REGISTRY/productos:$TAG
 
 # Build y push Frontend
-echo ">>> Build Frontend..."
-docker build -t proyectoesteban-frontend:$TAG -f Frontend/Dockerfile Frontend
+echo ">>> Build Frontend ($PLATFORM)..."
+docker build --platform $PLATFORM -t proyectoesteban-frontend:$TAG -f Frontend/Dockerfile Frontend
 docker tag proyectoesteban-frontend:$TAG $REGISTRY/frontend:$TAG
 echo ">>> Push Frontend..."
 docker push $REGISTRY/frontend:$TAG
