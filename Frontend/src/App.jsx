@@ -7,6 +7,10 @@ import Registro from './pages/Registro';
 import Usuarios from './pages/Usuarios';
 import ListarProductos from './pages/ListarProductos';
 import AgregarProducto from './pages/AgregarProducto';
+import Mujer from './pages/Mujer';
+import Hombre from './pages/Hombre';
+import Deportes from './pages/Deportes';
+import Ninos from './pages/Ninos';
 
 function PrivateRoute({ children }) {
   const { isAuthenticated } = useAuth();
@@ -29,6 +33,10 @@ function AppRoutes() {
         <Route index element={<Navigate to="/usuarios" replace />} />
         <Route path="login" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="registro" element={<PublicRoute><Registro /></PublicRoute>} />
+        <Route path="mujer" element={<Mujer />} />
+        <Route path="hombre" element={<Hombre />} />
+        <Route path="deportes" element={<Deportes />} />
+        <Route path="ninos" element={<Ninos />} />
         <Route path="usuarios" element={<PrivateRoute><Usuarios /></PrivateRoute>} />
         <Route path="productos" element={<PrivateRoute><ListarProductos /></PrivateRoute>} />
         <Route path="productos/agregar" element={<PrivateRoute><AgregarProducto /></PrivateRoute>} />

@@ -13,8 +13,12 @@ export default function Layout() {
     <div className={styles.layout}>
       {isAuthenticated && <NotificacionesToast />}
       <header className={styles.header}>
-        <h1 className={styles.logo}>Proyecto Esteban</h1>
+        <h1 className={styles.logo}>Tienda On Line</h1>
         <nav className={styles.nav}>
+          <Link to="/mujer" className={isActive('/mujer') ? styles.menuLinkActive : styles.menuLink}>Mujer</Link>
+          <Link to="/hombre" className={isActive('/hombre') ? styles.menuLinkActive : styles.menuLink}>Hombre</Link>
+          <Link to="/deportes" className={isActive('/deportes') ? styles.menuLinkActive : styles.menuLink}>Deportes</Link>
+          <Link to="/ninos" className={isActive('/ninos') ? styles.menuLinkActive : styles.menuLink}>Niños</Link>
           {isAuthenticated ? (
             <>
               <span className={styles.user}>Hola, {user?.nombre || user?.nombreUsuario}</span>
