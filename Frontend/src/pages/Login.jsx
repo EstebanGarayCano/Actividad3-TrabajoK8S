@@ -35,13 +35,14 @@ export default function Login() {
     <div className={styles.wrapper}>
       <div className={styles.card}>
         <h2 className={styles.title}>Iniciar sesión</h2>
+        <p className={styles.subtitle}>Tienda Online — Accede a tu cuenta</p>
         <nav className={styles.categoryNav}>
           <span className={styles.categoryLabel}>Explora nuestras categorías:</span>
           <div className={styles.categoryLinks}>
-            <Link to="/hombre">Hombre</Link>
-            <Link to="/mujer">Mujer</Link>
-            <Link to="/ninos">Niños</Link>
-            <Link to="/deportes">Deportes</Link>
+            <Link to="/hombre">1. Hombre</Link>
+            <Link to="/mujer">2. Mujer</Link>
+            <Link to="/ninos">3. Niños</Link>
+            <Link to="/deportes">4. Deportes</Link>
           </div>
         </nav>
         <form onSubmit={handleSubmit} className={styles.form}>
