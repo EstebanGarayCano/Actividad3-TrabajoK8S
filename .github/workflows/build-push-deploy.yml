@@ -1,0 +1,102 @@
+# CI: Build and push images to Google Artifact Registry (linux/amd64).
+# CD: Optional rollout restart in GKE so new images are pulled.
+#
+# Secrets (GitHub repo → Settings → Secrets and variables → Actions):
+#   GCP_SA_KEY: JSON key of a GCP Service Account with:
+#     - roles/artifactregistry.writer (to push images)
+#     - roles/container.developer (only if you enable the "deploy" job, to run kubectl)
+#
+# Optional (for deploy job): set as repo variables or in env:
+#   GKE_CLUSTER_NAME, GKE_ZONE (e.g. mi-cluster, us-central1)
+
+name: Build, Push & Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  GCP_PROJECT_ID: project-5a9e4b02-002e-455f-acc
+  GCP_REGION: us-central1
+  AR_REPO: actividad3trabajok8s
+  PLATFORM: linux/amd64
+
+jobs:
+  build-and-push:
+    name: Build and push images
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.GCP_PROJECT_ID }}
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker ${{ env.GCP_REGION }}-docker.pkg.dev --quiet
+
+      - name: Build and push Backend
+        run: |
+          docker build --platform ${{ env.PLATFORM }} \
+            -t ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/backend:latest \
+            -f Backend/Dockerfile Backend
+          docker push ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/backend:latest
+
+      - name: Build and push Productos
+        run: |
+          docker build --platform ${{ env.PLATFORM }} \
+            -t ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/productos:latest \
+            -f Productos/Dockerfile Productos
+          docker push ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/productos:latest
+
+      - name: Build and push Frontend
+        run: |
+          docker build --platform ${{ env.PLATFORM }} \
+            -t ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/frontend:latest \
+            -f Frontend/Dockerfile Frontend
+          docker push ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/frontend:latest
+
+  deploy:
+    name: Rollout restart (GKE)
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    env:
+      GKE_CLUSTER_NAME: ${{ vars.GKE_CLUSTER_NAME || 'mi-cluster' }}
+      GKE_ZONE: ${{ vars.GKE_ZONE || 'us-central1' }}
+      GKE_NAMESPACE: default
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.GCP_PROJECT_ID }}
+          install_components: gke-gcloud-auth-plugin
+
+      - name: Get GKE credentials
+        run: |
+          gcloud container clusters get-credentials ${{ env.GKE_CLUSTER_NAME }} \
+            --zone ${{ env.GKE_ZONE }} \
+            --project ${{ env.GCP_PROJECT_ID }}
+
+      - name: Rollout restart deployments
+        run: |
+          kubectl rollout restart deployment/backend deployment/frontend deployment/productos -n ${{ env.GKE_NAMESPACE }}
+          kubectl rollout status deployment/backend deployment/frontend deployment/productos -n ${{ env.GKE_NAMESPACE }} --timeout=300s
