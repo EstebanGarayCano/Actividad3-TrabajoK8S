@@ -34,10 +34,10 @@ export default function Login() {
   return (
     <div className={styles.wrapper}>
       <div className={styles.card}>
-        <h2 className={styles.title}>Iniciar sesión</h2>
-        <p className={styles.subtitle}>Tienda Online — Accede a tu cuenta</p>
+        <h2 className={styles.title}>Iniciar sesión Por favor</h2>
+        <p className={styles.subtitle}>Tienda Online — Se debe ver este cambio</p>
         <nav className={styles.categoryNav}>
-          <span className={styles.categoryLabel}>Explora nuestras categorías:</span>
+          <span className={styles.categoryLabel}>Verifica las categorias:</span>
           <div className={styles.categoryLinks}>
             <Link to="/hombre">1. Hombre</Link>
             <Link to="/mujer">2. Mujer</Link>
