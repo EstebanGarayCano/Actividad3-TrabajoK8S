@@ -1,13 +1,8 @@
 # CI: Build and push images to Google Artifact Registry (linux/amd64).
-# CD: Optional rollout restart in GKE so new images are pulled.
+# CD: Rollout restart in GKE so new images are pulled.
 #
-# Secrets (GitHub repo → Settings → Secrets and variables → Actions):
-#   GCP_SA_KEY: JSON key of a GCP Service Account with:
-#     - roles/artifactregistry.writer (to push images)
-#     - roles/container.developer (only if you enable the "deploy" job, to run kubectl)
-#
-# Optional (for deploy job): set as repo variables or in env:
-#   GKE_CLUSTER_NAME, GKE_ZONE (e.g. mi-cluster, us-central1)
+# Secret en GitHub (Settings → Secretos y variables → Actions): GCP_SA_KEY = contenido del JSON de la cuenta de servicio.
+# La cuenta debe tener: Escritor de Artifact Registry + Desarrollador de Kubernetes Engine.
 
 name: Build, Push & Deploy
 
